@@ -1,4 +1,4 @@
-package com.xiaoke_1256.aitest;
+package com.xiaoke_1256.customerservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

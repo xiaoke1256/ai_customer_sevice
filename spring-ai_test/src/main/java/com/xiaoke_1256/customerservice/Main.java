@@ -1,4 +1,4 @@
-package com.xiaoke_1256.aitest;
+package com.xiaoke_1256.customerservice;
 
 public class Main {
     public static void main(String[] args) {
