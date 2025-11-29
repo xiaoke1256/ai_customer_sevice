@@ -1,3 +1,4 @@
 # Project exclude paths
+/ai_customer_service/target/
 /spring-ai_test/target/
 /.idea/
