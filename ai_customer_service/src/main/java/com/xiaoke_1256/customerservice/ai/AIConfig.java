@@ -9,8 +9,10 @@ import org.springframework.ai.chat.prompt.ChatOptions;
 import org.springframework.ai.content.Media;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.embedding.EmbeddingModel;
+import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.SimpleVectorStore;
 import org.springframework.ai.vectorstore.VectorStore;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,28 +34,37 @@ public class AIConfig {
     private Resource systemPromptResource;
 
     @Bean
-    public ChatClient chatClient(ChatClient.Builder builder, VectorStore vectorStore) {
+    public ChatClient chatClient(ChatClient.Builder builder, @Autowired VectorStore vectorStore) {
+
+        // 启用混合搜索，包括嵌入和全文搜索
+        SearchRequest searchRequest = SearchRequest.builder().
+                topK(10)
+                .similarityThresholdAll()
+                .build();
+
+        QuestionAnswerAdvisor questionAnswerAdvisor = QuestionAnswerAdvisor.builder(vectorStore).searchRequest(searchRequest).build();
+
         ChatClient client = builder
                 .defaultOptions( ChatOptions.builder().model("qwen-plus").build())
                 .defaultSystem(systemPromptResource)
-                .defaultAdvisors(Arrays.asList(new SimpleLoggerAdvisor(),new QuestionAnswerAdvisor(vectorStore)))
+                .defaultAdvisors(Arrays.asList(new SimpleLoggerAdvisor(),questionAnswerAdvisor))
                 .build();
         return client;
     }
 
-    @Bean
-    public VectorStore vectorStore(EmbeddingModel embeddingModel){
-        SimpleVectorStore vectorStore = SimpleVectorStore.builder(embeddingModel).build();
-        InputStream inputStream = AIConfig.class.getResourceAsStream("/product_types.md");
-
-        String content = "";
-        try {
-            content =IOUtils.toString(inputStream, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        Document doc = new Document("productTypes", content, new HashMap<String, Object>());
-        vectorStore.add(Arrays.asList(doc));
-        return vectorStore;
-    }
+//    @Bean
+//    public VectorStore vectorStore(EmbeddingModel embeddingModel){
+//        SimpleVectorStore vectorStore = SimpleVectorStore.builder(embeddingModel).build();
+//        InputStream inputStream = AIConfig.class.getResourceAsStream("/product_types.md");
+//
+//        String content = "";
+//        try {
+//            content =IOUtils.toString(inputStream, StandardCharsets.UTF_8);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//        Document doc = new Document("productTypes", content, new HashMap<String, Object>());
+//        vectorStore.add(Arrays.asList(doc));
+//        return vectorStore;
+//    }
 }

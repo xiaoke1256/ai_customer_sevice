@@ -3,10 +3,20 @@ server:
 
 spring:
   application:
-    name: spring-boot-demo
+    name: ai-customer-service
+  elasticsearch:
+    uris: http://192.168.249.132:9200
+    username: elastic
+    password: xiaoke_1256
   ai:
     dashscope:
-     api-key: ${DASH_SCOPE_API_KEY}
+      api-key: ${DASH_SCOPE_API_KEY}
+    vectorstore:
+      elasticsearch:
+        initialize-schema: true
+        index-name: custom-index
+        dimensions: 1536
+        similarity: cosine
 
 logging:
   level:
