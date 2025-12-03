@@ -1,0 +1,63 @@
+package com.xiaoke_1256.customerservice.entity;
+
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
+/**
+ * <p>
+ * 商品分类
+ * </p>
+ *
+ * @author xiaoke_1256
+ * @since 2025-09-08
+ */
+@Getter
+@Setter
+@TableName("product_type")
+public class ProductTypeEntity implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * 类型编号，主键
+     */
+    private String typeId;
+
+    /**
+     * 类型名称
+     */
+    private String typeName;
+
+    /**
+     * 父类型编号
+     */
+    private String parentTypeId;
+
+    /**
+     * 类型描述
+     */
+    private String typeDesc;
+
+    /**
+     * 显示顺序
+     */
+    private Integer showOrder;
+
+    /**
+     * 插入时间
+     */
+    @TableField(fill= FieldFill.INSERT)
+    private LocalDateTime insertTime;
+
+    /**
+     * 修改时间
+     */
+    @TableField(fill= FieldFill.INSERT_UPDATE)
+    private LocalDateTime updateTime;
+}

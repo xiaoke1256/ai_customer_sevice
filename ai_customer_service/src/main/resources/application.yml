@@ -4,6 +4,22 @@ server:
 spring:
   application:
     name: ai-customer-service
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.249.101:3306/product?characterEncoding=utf-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false&autoReconnect=true
+    username: productUser
+    password: xiaoke_1256
+    druid:
+      validation-query: select 1
+      idle-timeout: 60000
+      min-idle: 10
+      max-active: 50
+      max-wait: 60000
+      time-between-eviction-runs-millis: 60000
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
   elasticsearch:
     uris: http://192.168.249.132:9200
     username: elastic
