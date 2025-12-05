@@ -4,3 +4,19 @@ spring:
   ai:
     dashscope:
      api-key: ${DASH_SCOPE_API_KEY}
+  data:
+    redis:
+      cluster:
+        nodes:
+          - 192.168.249.136:6379
+          - 192.168.249.137:6379
+          - 192.168.249.138:6379
+          - 192.168.249.139:6379
+          - 192.168.249.140:6379
+          - 192.168.249.141:6379
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
