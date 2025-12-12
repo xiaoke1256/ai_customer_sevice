@@ -25,6 +25,7 @@ public class AIController {
     public String chat(@RequestParam("userPrompt") String userPrompt){
         System.out.println("userPrompt:"+userPrompt);
         ChatClient.CallResponseSpec response = chatClient.prompt()
+                .system( p -> p.param("username", "游客").param("account", "null") )
                 .user(userPrompt)
 //                .advisors(spec -> spec.param(ChatMemory.CONVERSATION_ID, conversantId))
                 .call();
