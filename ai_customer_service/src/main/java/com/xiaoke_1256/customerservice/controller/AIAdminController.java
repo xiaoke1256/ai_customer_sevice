@@ -90,6 +90,7 @@ public class AIAdminController {
                 * 商品名称：%s
                 * 商标：%s
                 * 商标价格：%f
+                * 商品详情地址：www.orders.com/product/detail/%s
                 """;
         return String.format(template,
                 p.getProductCode(),
@@ -97,7 +98,8 @@ public class AIAdminController {
                 p.getProductCode(),
                 p.getProductName(),
                 StringUtils.trimToEmpty(p.getBrand()),
-                (p.getProductPrice()!=null?p.getProductPrice().doubleValue()/1000:0.0d));
+                (p.getProductPrice()!=null?p.getProductPrice().doubleValue()/1000:0.0d),
+                p.getProductCode());
 
     }
 }

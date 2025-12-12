@@ -2,6 +2,7 @@ package com.xiaoke_1256.customerservice.controller;
 
 import org.slf4j.Logger;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +25,9 @@ public class AIController {
     public String chat(@RequestParam("userPrompt") String userPrompt){
         System.out.println("userPrompt:"+userPrompt);
         ChatClient.CallResponseSpec response = chatClient.prompt()
-                .user(userPrompt).call();
+                .user(userPrompt)
+//                .advisors(spec -> spec.param(ChatMemory.CONVERSATION_ID, conversantId))
+                .call();
         String content = response.content();
         return content;
     }

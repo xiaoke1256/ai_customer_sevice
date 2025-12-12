@@ -1,31 +1,23 @@
 package com.xiaoke_1256.customerservice.ai;
 
-import com.alibaba.cloud.ai.dashscope.chat.DashScopeChatOptions;
-import org.apache.commons.io.IOUtils;
+import com.alibaba.cloud.ai.memory.redis.RedisChatMemoryRepository;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.PromptChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.chat.client.advisor.vectorstore.QuestionAnswerAdvisor;
+import org.springframework.ai.chat.memory.ChatMemory;
+import org.springframework.ai.chat.memory.ChatMemoryRepository;
+import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.chat.prompt.ChatOptions;
-import org.springframework.ai.content.Media;
-import org.springframework.ai.document.Document;
-import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.ai.vectorstore.SearchRequest;
-import org.springframework.ai.vectorstore.SimpleVectorStore;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
-import org.springframework.util.MimeType;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 @Configuration
 public class AIConfig {
@@ -34,7 +26,9 @@ public class AIConfig {
     private Resource systemPromptResource;
 
     @Bean
-    public ChatClient chatClient(ChatClient.Builder builder, @Autowired VectorStore vectorStore) {
+    public ChatClient chatClient(ChatClient.Builder builder,
+                                 @Autowired VectorStore vectorStore,
+                                 @Autowired ChatMemory chatMemory) {
 
         // 启用混合搜索，包括嵌入和全文搜索
         SearchRequest searchRequest = SearchRequest.builder().
@@ -47,7 +41,10 @@ public class AIConfig {
         ChatClient client = builder
                 .defaultOptions( ChatOptions.builder().model("qwen-plus").build())
                 .defaultSystem(systemPromptResource)
-                .defaultAdvisors(Arrays.asList(new SimpleLoggerAdvisor(),questionAnswerAdvisor))
+                .defaultAdvisors(Arrays.asList(
+                        new SimpleLoggerAdvisor(),
+                        questionAnswerAdvisor,
+                        PromptChatMemoryAdvisor.builder(chatMemory).build()))
                 .build();
         return client;
     }
@@ -67,4 +64,21 @@ public class AIConfig {
 //        vectorStore.add(Arrays.asList(doc));
 //        return vectorStore;
 //    }
+
+    @Bean
+    public ChatMemoryRepository chatMemoryRepository(
+            @Value("${spring.ai.memory.redis.host}") String host,
+            @Value("${spring.ai.memory.redis.port}") int port,
+            @Value("${spring.ai.memory.redis.timeout}") int timeout) {
+        return RedisChatMemoryRepository.builder().host(host).port(port).timeout(timeout).build();
+    }
+
+    @Bean
+    public ChatMemory chatMemory(ChatMemoryRepository chatMemoryRepository){
+    	return MessageWindowChatMemory.
+                builder().
+                maxMessages(10).
+                chatMemoryRepository(chatMemoryRepository).build();
+    }
+
 }
