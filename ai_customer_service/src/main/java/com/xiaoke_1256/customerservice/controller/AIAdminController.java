@@ -2,14 +2,12 @@ package com.xiaoke_1256.customerservice.controller;
 
 import com.xiaoke_1256.customerservice.dto.ProductCondition;
 import com.xiaoke_1256.customerservice.entity.ProductEntity;
-import com.xiaoke_1256.customerservice.entity.ProductTypeEntity;
 import com.xiaoke_1256.customerservice.service.ProductService;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

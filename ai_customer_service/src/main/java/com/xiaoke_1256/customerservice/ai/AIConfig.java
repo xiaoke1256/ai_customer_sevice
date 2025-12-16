@@ -1,6 +1,7 @@
 package com.xiaoke_1256.customerservice.ai;
 
 import com.alibaba.cloud.ai.memory.redis.RedisChatMemoryRepository;
+import com.xiaoke_1256.customerservice.service.OrderService;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.PromptChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
@@ -8,7 +9,8 @@ import org.springframework.ai.chat.client.advisor.vectorstore.QuestionAnswerAdvi
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.memory.ChatMemoryRepository;
 import org.springframework.ai.chat.memory.MessageWindowChatMemory;
-import org.springframework.ai.chat.prompt.ChatOptions;
+import org.springframework.ai.model.tool.ToolCallingChatOptions;
+import org.springframework.ai.tool.method.MethodToolCallbackProvider;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +30,8 @@ public class AIConfig {
     @Bean
     public ChatClient chatClient(ChatClient.Builder builder,
                                  @Autowired VectorStore vectorStore,
-                                 @Autowired ChatMemory chatMemory) {
+                                 @Autowired ChatMemory chatMemory,
+                                 @Autowired OrderService orderServiceTool) {
 
         // 启用混合搜索，包括嵌入和全文搜索
         SearchRequest searchRequest = SearchRequest.builder().
@@ -38,8 +41,15 @@ public class AIConfig {
 
         QuestionAnswerAdvisor questionAnswerAdvisor = QuestionAnswerAdvisor.builder(vectorStore).searchRequest(searchRequest).build();
 
+        System.out.println("orderServiceTool:"+orderServiceTool);
+        
+        // 创建工具回调，使用阿里Spring AI的工具调用支持
+        MethodToolCallbackProvider toolCallbacksProvider = MethodToolCallbackProvider.builder()
+                .toolObjects(orderServiceTool)
+                .build();
+
         ChatClient client = builder
-                .defaultOptions( ChatOptions.builder().model("qwen-plus").build())
+                .defaultOptions(ToolCallingChatOptions.builder().model("qwen-plus").toolCallbacks(toolCallbacksProvider.getToolCallbacks()).build())
                 .defaultSystem(systemPromptResource)
                 .defaultAdvisors(Arrays.asList(
                         new SimpleLoggerAdvisor(),

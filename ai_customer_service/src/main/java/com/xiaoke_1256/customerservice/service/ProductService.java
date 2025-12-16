@@ -1,11 +1,9 @@
 package com.xiaoke_1256.customerservice.service;
 
 import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xiaoke_1256.customerservice.dto.ProductCondition;
-import com.xiaoke_1256.customerservice.dto.SimpleProduct;
 import com.xiaoke_1256.customerservice.entity.ProductEntity;
 import com.xiaoke_1256.customerservice.entity.ProductTypeEntity;
 import com.xiaoke_1256.customerservice.mapper.ProductMapper;
