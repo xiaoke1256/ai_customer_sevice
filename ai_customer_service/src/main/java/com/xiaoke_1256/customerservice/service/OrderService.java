@@ -40,7 +40,7 @@ public class OrderService {
      * @param orderNo
      * @return
      */
-    @Tool(description="取消订单", returnDirect = false)
+    @Tool(description="撤单/取消订单", returnDirect = false)
     public String cancelOrder(@ToolParam(description="订单号") String orderNo){
         System.out.println("取消订单，orderNo："+orderNo);
         return "取消成功";
