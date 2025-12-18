@@ -1,0 +1,31 @@
+{
+	"name": "chat_ui",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"dev": "next dev --turbo",
+		"build": "next build",
+		"start": "next start",
+		"lint": "next lint",
+		"test": "bun test",
+		"testcloud": "cross-env BASE_URL=https://log.pikebao.com bun test"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"@heroui/react": "^2.7.5",
+		"cross-env": "^7.0.3",
+		"framer-motion": "^12.6.3",
+		"mongoose": "^8.13.1",
+		"next": "^15.2.4",
+		"react": "^19.1.0",
+		"react-dom": "^19.1.0"
+	},
+	"devDependencies": {
+		"autoprefixer": "^10.4.21",
+		"postcss": "^8.5.3",
+		"tailwindcss": "^3.4.17"
+	}
+}

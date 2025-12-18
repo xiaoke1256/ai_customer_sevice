@@ -1,0 +1,10 @@
+{
+	name: 'device_log',
+	script: 'npm start',
+	exec_mode: 'fork',
+	instances: 1,
+	env: {
+		NODE_ENV: 'production',
+		MONGODB_URL: 'mongodb://172.19.244.218:27017/test',
+	},
+}
