@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @RestController
@@ -35,5 +37,34 @@ public class AIController {
                 .call();
         String content = response.content();
         return content;
+    }
+
+    @GetMapping("/openSseChat")
+    public SseEmitter openSseChat(@RequestParam("userPrompt") String userPrompt, @RequestHeader(value = "sessionId", required = false) String sessionId){
+        SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
+        new Thread(() -> {
+            try {
+                ChatClient.StreamResponseSpec stream = chatClient.prompt()
+                        .system(p -> p.param("username", "游客").param("account", "null"))
+                        .user(userPrompt)
+                        .advisors(spec -> spec.param(ChatMemory.CONVERSATION_ID, sessionId))
+                        .stream();
+                stream.content().all(content -> {
+                    try {
+                        emitter.send(SseEmitter.event().name("data").data(content));
+                        return true;
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                        //return false;
+                    }
+                }).block();
+                emitter.complete();
+            } catch (Exception e) {
+                LOG.error(e.getMessage(),e);
+                emitter.completeWithError(e);
+            }
+        });
+
+        return emitter;
     }
 }
