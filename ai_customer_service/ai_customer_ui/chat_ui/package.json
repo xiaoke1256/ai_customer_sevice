@@ -15,7 +15,7 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
-		"@heroui/react": "^2.7.5",
+		"@heroui/react": "2.7.5",
 		"cross-env": "^7.0.3",
 		"framer-motion": "^12.6.3",
 		"mongoose": "^8.13.1",
