@@ -1,8 +1,10 @@
+'use client';
+
 import {TestButton} from './test_button'
 
-export const metadata = {
-	title: 'ai客服系统',
-};
+// export const metadata = {
+// 	title: 'ai客服系统',
+// };
 
 export default function Page() {
 	return (
