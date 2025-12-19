@@ -1,5 +1,7 @@
 'use client';
 
+import { Chat} from './compments'
+
 export default function ChatIndex() {
     return (
     <>
@@ -10,11 +12,7 @@ export default function ChatIndex() {
                 backgroundPosition: "center" 
             }} 
         >
-            <div className="h-full mt-5 mb-5 max-w-[1060px] w-full bg-blue-200 opacity-75">
-                <div className="head">
-
-                </div>
-            </div>
+           <Chat/>
         </div>
     </>
     );
