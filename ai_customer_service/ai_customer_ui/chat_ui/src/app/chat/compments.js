@@ -29,7 +29,8 @@ export function Chat() {
         });
         source.addEventListener('complete', (event) => {
             console.log('Custom event:', event.data);
-            source.close();
+            //source.close();
+            //console.log('调用了close' );
         });
         source.onmessage = function(event) { // 当接收到消息时触发此函数
             console.log('New message:', event.type,event.data); // 打印接收到的数据
@@ -49,9 +50,10 @@ export function Chat() {
                     console.log('SSE URL:', event.target.url);
                 }
             } else {
-                console.error('EventSource error:', event);
+                console.log('EventSource error:', event);
+                source.close();
             }
-            source.close();
+            
         }
         source.onclose = function(event){
             console.log('onclose:', event);
