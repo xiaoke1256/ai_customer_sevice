@@ -4,10 +4,8 @@ import org.slf4j.Logger;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
@@ -39,31 +37,35 @@ public class AIController {
         return content;
     }
 
-    @GetMapping("/openSseChat")
-    public SseEmitter openSseChat(@RequestParam("userPrompt") String userPrompt, @RequestHeader(value = "sessionId", required = false) String sessionId){
+    @CrossOrigin(origins = "http://localhost:3000")
+    @GetMapping(value ="/openSseChat",produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter openSseChat(@RequestParam("userPrompt") String userPrompt, @RequestHeader(value = "sessionId", required = false) String sessionId) throws IOException {
+        String conversantId = sessionId==null? UUID.randomUUID().toString() :sessionId;
         SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
+        emitter.onCompletion(() -> LOG.info("SSE connection closed"));
+        emitter.onError(t -> LOG.error(t.getMessage(),t));
+        emitter.onTimeout(() -> LOG.info("SSE connection timed out"));
+        emitter.send(SseEmitter.event().name("start" ).data("start"));
+
         new Thread(() -> {
             try {
-                ChatClient.StreamResponseSpec stream = chatClient.prompt()
+                LOG.info("sessionId:"+sessionId);
+                LOG.info("start thread.");
+                ChatClient.CallResponseSpec response = chatClient.prompt()
                         .system(p -> p.param("username", "游客").param("account", "null"))
                         .user(userPrompt)
-                        .advisors(spec -> spec.param(ChatMemory.CONVERSATION_ID, sessionId))
-                        .stream();
-                stream.content().all(content -> {
-                    try {
-                        emitter.send(SseEmitter.event().name("data").data(content));
-                        return true;
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                        //return false;
-                    }
-                }).block();
-                emitter.complete();
+                        .advisors(spec -> spec.param(ChatMemory.CONVERSATION_ID, conversantId))
+                        .call();
+
+                emitter.send(response.content());
+                Thread.sleep(10);
+                emitter.send(SseEmitter.event().name("complete" ).data("complete"));
+                //emitter.complete();
             } catch (Exception e) {
                 LOG.error(e.getMessage(),e);
                 emitter.completeWithError(e);
             }
-        });
+        }).start();
 
         return emitter;
     }
