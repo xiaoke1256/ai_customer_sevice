@@ -2,14 +2,20 @@
 
 import {ChevronLeftIcon} from '@heroicons/react/24/outline';
 import {Button,Input} from '@heroui/react';
-import {useState } from 'react';
+import { useState, useEffect,useCallback } from 'react';
 import { v4 as uuid } from 'uuid';
 
 export function Chat() {
     //从后台获取上次聊天的sessionId
     //从后台获取上次聊天的session内容
     //若从后台无法获取sessionId，就生成一个新的sessionId
-    const sessionId = uuid();
+    const [msgs,setMsgs] = useState([]);
+
+    const [sessionId,setSessionId] = useState('');
+
+    useEffect(()=>{
+        setSessionId(uuid())
+    },[]);
 
     console.log("sessionId:",sessionId);
 
@@ -24,6 +30,8 @@ export function Chat() {
                 }
             }
         );
+        setMsgs([...msgs,{form:'user',content:userPrompt}]);
+        //appendMsgs({form:'user',content:userPrompt})
         source.addEventListener('start', (event) => {
             console.log('Custom event:', event.data);
         });
@@ -34,12 +42,13 @@ export function Chat() {
         });
         source.onmessage = function(event) { // 当接收到消息时触发此函数
             console.log('New message:', event.type,event.data); // 打印接收到的数据
+            setMsgs((currentMsg)=>[...currentMsg,{form:'ai',content:event.data}]);
         };
         source.onopen = function(event){
             console.log('onopen:', event);
         }
         source.onerror = function(event){
-            console.log('onerror:', event);
+            console.log('onerror:', JSON.stringify(event));
             console.log('event.target.readyState:', event.target.readyState);
             if (event.target.readyState == EventSource.CLOSED) {
                 console.log('Connection closed');
@@ -67,7 +76,9 @@ export function Chat() {
                 <a href="/"><ChevronLeftIcon className='h-6'/></a>
             </div>
             <div className="content flex-1">
-
+                {
+                  msgs.map((msg,index)=>(<div key={index} >{msg.content}</div>))
+                }
             </div>
             <div className="foot m-2 flex">
                 <Input className="m-1" value={userPrompt} onValueChange={setUserPrompt} ></Input>
