@@ -30,8 +30,7 @@ export function Chat() {
                 }
             }
         );
-        setMsgs([...msgs,{form:'user',content:userPrompt}]);
-        //appendMsgs({form:'user',content:userPrompt})
+        setMsgs([...msgs,{from:'user',content:userPrompt}]);
         source.addEventListener('start', (event) => {
             console.log('Custom event:', event.data);
         });
@@ -42,7 +41,7 @@ export function Chat() {
         });
         source.onmessage = function(event) { // 当接收到消息时触发此函数
             console.log('New message:', event.type,event.data); // 打印接收到的数据
-            setMsgs((currentMsg)=>[...currentMsg,{form:'ai',content:event.data}]);
+            setMsgs((currentMsg)=>[...currentMsg,{from:'ai',content:event.data}]);
         };
         source.onopen = function(event){
             console.log('onopen:', event);
@@ -77,7 +76,19 @@ export function Chat() {
             </div>
             <div className="content flex-1">
                 {
-                  msgs.map((msg,index)=>(<div key={index} >{msg.content}</div>))
+                    msgs.map((msg,index)=>{
+                        console.log("msg.from:",msg.from);
+                        if(msg.from==='ai'){//ai客户或人工客服,靠左显示
+                            return (<div key={index} className='flex justify-start' >
+                                <div></div>
+                                <div className="max-w-[80%] bg-[#D1F4E0]/[0.3] border-1 border-green-400 rounded">{msg.content}</div>
+                            </div>);
+                        }else{
+                            return (<div key={index} className='flex justify-end' >
+                                <div className="max-w-[80%] bg-[#D1F4E0]/[0.3] border-1 border-green-400 rounded">{msg.content}</div>
+                            </div>);
+                        }
+                    })
                 }
             </div>
             <div className="foot m-2 flex">
