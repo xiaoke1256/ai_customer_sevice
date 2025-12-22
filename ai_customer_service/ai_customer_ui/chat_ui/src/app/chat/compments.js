@@ -82,7 +82,7 @@ export function Chat() {
                             return (<div key={index} className='flex justify-start' >
                                 <div
                                     style={{ 
-                                        marginTop:'4px',
+                                        marginTop:'10px',
                                         backgroundImage: 'url(delta.svg)',
                                         backgroundSize: "cover",
                                         backgroundPosition: "center",
@@ -90,14 +90,14 @@ export function Chat() {
                                         height:"12px"
                                     }} 
                                 ></div>
-                                <div className="max-w-[80%] bg-[#D1F4E0]/[0.6] rounded">{msg.content}</div>
+                                <div className="max-w-[80%] p-2 bg-[#D1F4E0]/[0.6] rounded" style={{ whiteSpace: 'pre-wrap' }}>{msg.content}</div>
                             </div>);
                         }else{
                             return (<div key={index} className='flex justify-end' >
-                                <div className="max-w-[80%] bg-[#D1F4E0]/[0.6] rounded">{msg.content}</div>
+                                <div className="max-w-[80%] p-2 bg-[#D1F4E0]/[0.6] rounded" style={{ whiteSpace: 'pre-wrap' }} >{msg.content}</div>
                                 <div
                                     style={{ 
-                                        marginTop:'4px',
+                                        marginTop:'10px',
                                         backgroundImage: 'url(delta.svg)',
                                         backgroundSize: "cover",
                                         backgroundPosition: "center",
