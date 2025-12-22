@@ -80,12 +80,32 @@ export function Chat() {
                         console.log("msg.from:",msg.from);
                         if(msg.from==='ai'){//ai客户或人工客服,靠左显示
                             return (<div key={index} className='flex justify-start' >
-                                <div></div>
-                                <div className="max-w-[80%] bg-[#D1F4E0]/[0.3] border-1 border-green-400 rounded">{msg.content}</div>
+                                <div
+                                    style={{ 
+                                        marginTop:'4px',
+                                        backgroundImage: 'url(delta.svg)',
+                                        backgroundSize: "cover",
+                                        backgroundPosition: "center",
+                                        width:"12px",
+                                        height:"12px"
+                                    }} 
+                                ></div>
+                                <div className="max-w-[80%] bg-[#D1F4E0]/[0.6] rounded">{msg.content}</div>
                             </div>);
                         }else{
                             return (<div key={index} className='flex justify-end' >
-                                <div className="max-w-[80%] bg-[#D1F4E0]/[0.3] border-1 border-green-400 rounded">{msg.content}</div>
+                                <div className="max-w-[80%] bg-[#D1F4E0]/[0.6] rounded">{msg.content}</div>
+                                <div
+                                    style={{ 
+                                        marginTop:'4px',
+                                        backgroundImage: 'url(delta.svg)',
+                                        backgroundSize: "cover",
+                                        backgroundPosition: "center",
+                                        transform: "scaleX(-1)",
+                                        width:"12px",
+                                        height:"12px"
+                                    }} 
+                                ></div>
                             </div>);
                         }
                     })
