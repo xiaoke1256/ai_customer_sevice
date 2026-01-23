@@ -7,7 +7,7 @@ export default function ChatIndex() {
     <>
         <div className="flex h-screen flex-col items-center justify-around" 
             style={{ 
-                backgroundImage: 'url(chat_bg.png)',
+                backgroundImage: 'url(chat_bg.jpg)',
                 backgroundSize: "cover",
                 backgroundPosition: "center" 
             }} 
