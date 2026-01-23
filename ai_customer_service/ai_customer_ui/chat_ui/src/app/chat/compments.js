@@ -79,7 +79,8 @@ export function Chat() {
                     msgs.map((msg,index)=>{
                         console.log("msg.from:",msg.from);
                         if(msg.from==='ai'){//ai客户或人工客服,靠左显示
-                            return (<div key={index} className='flex justify-start' >
+                            return (<div key={index} className='flex justify-start my-4' >
+                                <img src="agent.svg" width="64" height="64"></img>
                                 <div
                                     style={{ 
                                         marginTop:'10px',
@@ -93,7 +94,7 @@ export function Chat() {
                                 <div className="max-w-[80%] p-2 bg-[#D1F4E0]/[0.6] rounded" style={{ whiteSpace: 'pre-wrap' }}>{msg.content}</div>
                             </div>);
                         }else{
-                            return (<div key={index} className='flex justify-end' >
+                            return (<div key={index} className='flex justify-end my-4' >
                                 <div className="max-w-[80%] p-2 bg-[#D1F4E0]/[0.6] rounded" style={{ whiteSpace: 'pre-wrap' }} >{msg.content}</div>
                                 <div
                                     style={{ 
