@@ -74,14 +74,13 @@ export function Chat() {
             <div className="head m-2">
                 <a href="/"><ChevronLeftIcon className='h-6'/></a>
             </div>
-            <div className="content flex-1">
+            <div className="content flex-1 overflow-y-scroll">
                 {
                     msgs.map((msg,index)=>{
                         console.log("msg.from:",msg.from);
                         if(msg.from==='ai'){//ai客户或人工客服,靠左显示
                             return (<div key={index} className='flex justify-start my-2' >
-                                {/* <img src="agent.svg" width="64" height="64" className="ml-2"></img> */}
-                                 <Avatar color="default" radius="lg" showFallback src="agent.svg" className="ml-2" />
+                                <Avatar color="default" radius="lg" size="lg" showFallback src="agent.svg" className="ml-2" />
                                 <div
                                     style={{ 
                                         marginTop:'10px',
@@ -108,6 +107,7 @@ export function Chat() {
                                         height:"12px"
                                     }} 
                                 ></div>
+                                <Avatar color="default" radius="lg" size="lg" showFallback src="user.svg" className="mr-2" />
                             </div>);
                         }
                     })
