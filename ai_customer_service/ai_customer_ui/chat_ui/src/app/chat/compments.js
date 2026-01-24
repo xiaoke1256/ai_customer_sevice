@@ -1,7 +1,7 @@
 'use client';
 
 import {ChevronLeftIcon} from '@heroicons/react/24/outline';
-import {Button,Input} from '@heroui/react';
+import {Button,Input,Avatar} from '@heroui/react';
 import { useState, useEffect,useCallback } from 'react';
 import { v4 as uuid } from 'uuid';
 
@@ -79,8 +79,9 @@ export function Chat() {
                     msgs.map((msg,index)=>{
                         console.log("msg.from:",msg.from);
                         if(msg.from==='ai'){//ai客户或人工客服,靠左显示
-                            return (<div key={index} className='flex justify-start my-4' >
-                                <img src="agent.svg" width="64" height="64"></img>
+                            return (<div key={index} className='flex justify-start my-2' >
+                                {/* <img src="agent.svg" width="64" height="64" className="ml-2"></img> */}
+                                 <Avatar color="default" radius="lg" showFallback src="agent.svg" className="ml-2" />
                                 <div
                                     style={{ 
                                         marginTop:'10px',
@@ -94,7 +95,7 @@ export function Chat() {
                                 <div className="max-w-[80%] p-2 bg-[#D1F4E0]/[0.6] rounded" style={{ whiteSpace: 'pre-wrap' }}>{msg.content}</div>
                             </div>);
                         }else{
-                            return (<div key={index} className='flex justify-end my-4' >
+                            return (<div key={index} className='flex justify-end my-2' >
                                 <div className="max-w-[80%] p-2 bg-[#D1F4E0]/[0.6] rounded" style={{ whiteSpace: 'pre-wrap' }} >{msg.content}</div>
                                 <div
                                     style={{ 
