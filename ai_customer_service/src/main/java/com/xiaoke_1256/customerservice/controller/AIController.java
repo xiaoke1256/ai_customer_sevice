@@ -39,7 +39,6 @@ public class AIController {
         String content = response.content();
         return content;
     }
-    Map<String, SseEmitter> emitterMap = new ConcurrentHashMap<>();
 
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping(value ="/openSseChat",produces = MediaType.TEXT_EVENT_STREAM_VALUE)
@@ -48,33 +47,45 @@ public class AIController {
         SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
         emitter.onCompletion(() -> {
             LOG.info("SSE connection closed");
-            emitterMap.remove(conversantId);
         });
         emitter.onError(t -> {
             LOG.error(t.getMessage(),t);
-            emitterMap.remove(conversantId);
         });
         emitter.onTimeout(() -> {
             LOG.info("SSE connection timed out");
-            emitterMap.remove(conversantId);
         });
-        emitterMap.put(conversantId, emitter);
         emitter.send(SseEmitter.event().name("start" ).data("start"));
 
         new Thread(() -> {
             try {
                 LOG.info("sessionId:"+conversantId);
                 LOG.info("start thread.");
-                ChatClient.CallResponseSpec response = chatClient.prompt()
+                ChatClient.StreamResponseSpec responseStream = chatClient.prompt()
                         .system(p -> p.param("username", "游客").param("account", "null"))
                         .user(userPrompt)
                         .advisors(spec -> spec.param(ChatMemory.CONVERSATION_ID, conversantId))
-                        .call();
+                        .stream();
 
-                emitter.send(response.content());
-                Thread.sleep(10);
-                emitter.send(SseEmitter.event().name("complete" ).data("complete"));
-                emitter.complete();
+                LOG.info("获取 responseStream.");
+                responseStream.content().subscribe((String content)->{
+                    LOG.info("content:"+content);
+                    try {
+                        emitter.send(content);
+                    } catch (IOException e) {
+                        //TODO 向前端发送错误信息
+                        emitter.complete();
+                        throw new RuntimeException(e);
+                    }
+                }, emitter::completeWithError, ()->{
+                    try {
+                        emitter.send(SseEmitter.event().name("complete" ).data("complete"));
+                    } catch (IOException e) {
+                        //TODO 向前端发送错误信息
+                        emitter.complete();
+                        throw new RuntimeException(e);
+                    }
+                    emitter.complete();
+                });
             } catch (Exception e) {
                 LOG.error(e.getMessage(),e);
                 emitter.completeWithError(e);

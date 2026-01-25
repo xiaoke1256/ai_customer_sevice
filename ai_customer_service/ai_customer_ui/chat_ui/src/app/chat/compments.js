@@ -41,9 +41,20 @@ export function Chat() {
         });
         source.onmessage = function(event) { // 当接收到消息时触发此函数
             console.log('New message:', event.type,event.data); // 打印接收到的数据
-            setMsgs((currentMsg)=>[...currentMsg,{from:'ai',content:event.data}]);
+            if (event.type === 'message'){
+                setMsgs((currentMsg)=>{
+                    const last = currentMsg[currentMsg.length-1];
+                    const rest = [...currentMsg.slice(0, currentMsg.length-1)];
+                    if(last.from=='ai'){
+                       return [...rest,{from:'ai',content:last.content+event.data}];
+                    }else{
+                       return [...currentMsg,{from:'ai',content:event.data}];
+                    }
+                });
+            } 
+            
         };
-        source.onopen = function(event){
+        source.onopen = function(event) {
             console.log('onopen:', event);
         }
         source.onerror = function(event){
