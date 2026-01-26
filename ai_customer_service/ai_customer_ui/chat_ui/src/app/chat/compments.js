@@ -94,6 +94,8 @@ export function Chat() {
         source.onclose = function(event){
             console.log('onclose:', event);
         }
+        //发送出去以后，清掉input框
+        setUserPrompt('');
     }
     
     
