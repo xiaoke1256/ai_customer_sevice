@@ -14,8 +14,25 @@ export function Chat() {
     const [sessionId,setSessionId] = useState('');
 
     useEffect(()=>{
-        setSessionId(uuid())
+        setSessionId(uuid());
+        window.addEventListener('resize',handleResize)
+        handleResize()
+
     },[]);
+
+    const handleResize = () => {
+        console.log('Window was resized!');
+        const chartContent = document.getElementById('chartContent');
+        const pre = chartContent.previousSibling;
+        const next = chartContent.nextSibling;
+        const chartParent = document.getElementById('chartFull');
+        var viewportHeight = window.innerHeight;
+        console.log("chartParent.style.marginTop:",chartParent.style.marginTop.replace("px",""));
+        console.log("chartParent.style.marginBottom:",chartParent.style.marginBottom.replace("px",""));
+        const newHeight = viewportHeight- pre.offsetHeight-next.offsetHeight-chartParent.style.marginTop.replace("px","")-chartParent.style.marginBottom.replace("px","");
+        console.log("newHeight:"+newHeight)
+        chartContent.style.height=newHeight+'px';
+    };
 
     console.log("sessionId:",sessionId);
 
@@ -81,11 +98,11 @@ export function Chat() {
     
     
     return (
-        <div className="h-full mt-5 mb-5 max-w-[960px] w-full bg-blue-200 bg-opacity-75 flex flex-col justify-between">
-            <div className="head m-2">
+        <div id="chartFull" className="h-full max-w-[960px] w-full bg-blue-200 bg-opacity-75 flex flex-col justify-between" style={{marginTop:20,marginBottom:20}} >
+            <div className="head p-2">
                 <a href="/"><ChevronLeftIcon className='h-6'/></a>
             </div>
-            <div className="content flex-1 overflow-y-scroll">
+            <div id="chartContent" className="content overflow-y-scroll">
                 {
                     msgs.map((msg,index)=>{
                         console.log("msg.from:",msg.from);
@@ -124,7 +141,7 @@ export function Chat() {
                     })
                 }
             </div>
-            <div className="foot m-2 flex">
+            <div className="foot p-2 flex">
                 <Input className="m-1" value={userPrompt} onValueChange={setUserPrompt} ></Input>
                 <Button color='primary' className="m-1" onPress={sendMsg}>发送</Button>
             </div>
