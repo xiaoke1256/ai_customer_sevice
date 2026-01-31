@@ -1,4 +1,7 @@
 
+如何下载并在PC上安装千问大模型
+===
+
 安装 modelscope 和 transformers 库
 ```shell
 pip install modelscope transformers
