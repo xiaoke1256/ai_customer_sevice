@@ -16,7 +16,11 @@ export MODELSCOPE_CACHE=E:\ai_model # 可选：指定下载路径
 #Qwen2-7B（需量化后运行）
 modelscope download --model Qwen/Qwen3-0.6B
 ```
+先下载并安装 conda ， 然后安装 vLLM。
 
+以下命令要以管理员模式在PowerShell中运行
+
+如果install的过程遇到“文件或目录不存在”异常，可能是因为系统不支持长文件名，请在 regedit 中将 HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem 中项 LongPathsEnabled 值设置为 1。
 ```shell
 conda create -n vllm python=3.10 -y
 conda activate vllm
