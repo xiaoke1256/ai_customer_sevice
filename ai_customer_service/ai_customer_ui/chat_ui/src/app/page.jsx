@@ -1,6 +1,6 @@
 'use client';
 
-import { Image,Link } from '@heroui/react';
+import { Image,Link,Card } from '@heroui/react';
 import "./index.css";
 
 // export const metadata = {
@@ -10,13 +10,13 @@ import "./index.css";
 export default function Page() {
 	return (
 		<div className='h-screen p-4 flex flex-col gap-2'>
-			<div >测试主页面</div>
-			<a href="/chat" >转向聊天页面</a>
-			<div className="fixed-div">
+			<div >这里是AI客服系统</div>
+			<div >请点击右下角图标，转向<a href="/chat" >客服聊天页面</a></div>
+			<Card className="fixed-div mr-6 mb-6">
 				<Link href='/chat'>
 					<Image width={64} src="agent.svg" ></Image>
 				</Link>
-			</div>
+			</Card>
 		</div>
 	);
 }
