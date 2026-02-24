@@ -25,6 +25,9 @@ spring:
     username: elastic
     password: xiaoke_1256
   ai:
+#    openai:
+#      api-key: ${OPEN_AI_API_KEY}
+#      base-url:  https://api.openai.com/v1
     dashscope:
       api-key: ${DASH_SCOPE_API_KEY}
     vectorstore:
