@@ -42,7 +42,7 @@ docker rm   Qwen3-0.6B
 
 docker run -d \
   --name Qwen3-0.6B \
-  -v /root/ai_model/modelscope/hub/models/Qwen/Qwen3-0___6B:/models/Qwen3-0___6:ro \
+  -v /root/ai_model/models/Qwen/Qwen3-0___6B:/models/Qwen3-0___6:ro \
   -p 11435:8000 \
   --ipc=host \
   --security-opt seccomp=unconfined \

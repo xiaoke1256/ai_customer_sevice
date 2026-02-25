@@ -4,7 +4,8 @@
 
 先进入虚拟环境
 ```shell
-python3 -m venv myenv
+python3 -m venv myenv #只执行一次
+source myenv/bin/activate
 ```
 
 安装 modelscope 和 transformers 库
@@ -26,21 +27,29 @@ modelscope download --model Qwen/Qwen3-0.6B
 pip install "urllib3<2"
 ```
 
-先下载并安装 conda ， 然后安装 vLLM。
-
-以下命令要以管理员模式在PowerShell中运行
+先下载并安装 conda ，
+```shell
+wget https://repo.anaconda.com/miniconda/Miniconda3-py312_24.5.0-0-Linux-x86_64.sh
+chmod +x Miniconda3-py312_24.5.0-0-Linux-x86_64.sh
+~/Miniconda3-py312_24.5.0-0-Linux-x86_64.sh -b -u -p ~/miniconda3
+```
+激活 miniconda3环境
+```shell
+source ~/miniconda3/bin/activate
+```
+然后安装 vLLM。
 
 如果install的过程遇到“文件或目录不存在”异常，可能是因为系统不支持长文件名，请在 regedit 中将`HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem`中项 LongPathsEnabled 值设置为 1。
 ```shell
-conda create -n vllm python=3.10 -y
+conda create -n vllm python=3.12 -y
 conda activate vllm
-pip install vLLM
+pip install vllm==0.6.0 -i https://pypi.tuna.tsinghua.edu.cn/simple #安装指定版本
 ```
 
 启动服务
 ```shell
 python -m vLLM.entrypoints.openai.api_server \
-  --model C:\Users\用户名\.cache\modelscope\hub\models\Qwen\Qwen3-0___6B \
+  --model /root/ai_model/modelscope/hub/models/Qwen/Qwen3-0___6B \
   --trust-remote-code \
   --tensor-parallel-size 4 \ # 根据你的GPU数量调整，例如4张A100
   --max-model-len 8192 \

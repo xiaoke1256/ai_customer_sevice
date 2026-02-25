@@ -27,14 +27,14 @@ make && make install
 ```
 出现Successfully installed代表安装成功.
 
-添加软链接，可以将原来的链接备份
-```shell
-mv /usr/bin/python /usr/bin/python.bak #（如果执行后则需要更改系统文件默认为python3版本，可以自行找度娘哦）
-```
+
 添加python3的软链接：
 ```shell
 ln -s /usr/local/python39/bin/python3.9 /usr/bin/python39
 ln -s /usr/local/python39/bin/pip3.9 /usr/bin/pip39
+
+ln -s /usr/local/python39/bin/python3.9 /usr/bin/python3
+ln -s /usr/local/python39/bin/pip3.9 /usr/bin/pip3
 ```
 测试是否安装成功：
 ```shell
