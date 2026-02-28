@@ -40,21 +40,30 @@ docker rm   Qwen3-0.6B
 #  --dtype bfloat16
 
 
-docker run -d \
-  --name Qwen3-0.6B \
-  -v /root/ai_model/models/Qwen/Qwen3-0___6B:/models/Qwen3-0___6:ro \
-  -p 11435:8000 \
+#docker run -d \
+#  --name Qwen3-0.6B \
+#  -v /root/ai_model/models/Qwen/Qwen3-0___6B:/models/Qwen3-0___6:ro \
+#  -p 11435:8000 \
+#  --ipc=host \
+#  --security-opt seccomp=unconfined \
+#  --security-opt apparmor=unconfined \
+#  --ulimit nproc=65535:65535 \
+#  --ulimit nofile=65536:65536 \
+#  -e OPENBLAS_NUM_THREADS=1 \
+#  -e OMP_NUM_THREADS=1 \
+#  -e NUMBA_NUM_THREADS=1 \
+#  -e NUMPY_DISABLE_CPU_FEATURES="sse3 ssse3 sse41 popcnt avx avx2 fma3" \
+#  -e VLLM_LOGGING_LEVEL=DEBUG \
+#  vllm/vllm-openai:latest \
+#  --model /models/Qwen3-0___6 \
+#  --max-model-len 32768 \
+#  --trust-remote-code \
+#  --dtype bfloat16
+
+
+docker run --rm \
+  -v /root/ai_model/models:/root/.cache/huggingface \
+  -p 8000:8000 \
   --ipc=host \
-  --security-opt seccomp=unconfined \
-  --security-opt apparmor=unconfined \
-  --ulimit nproc=65535:65535 \
-  --ulimit nofile=65536:65536 \
-  -e OPENBLAS_NUM_THREADS=1 \
-  -e OMP_NUM_THREADS=1 \
-  -e NUMBA_NUM_THREADS=1 \
-  -e NUMPY_DISABLE_CPU_FEATURES="sse3 ssse3 sse41 popcnt avx avx2 fma3" \
-  vllm/vllm-openai:latest \
-  --model /models/Qwen3-0___6 \
-  --max-model-len 32768 \
-  --trust-remote-code \
-  --dtype bfloat16
+  public.ecr.aws/q9t5s3a7/vllm-cpu-release-repo:v0.8.5 \
+  --model=Qwen/Qwen3-0.6B
