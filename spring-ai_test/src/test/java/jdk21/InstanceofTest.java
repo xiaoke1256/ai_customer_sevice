@@ -1,4 +1,4 @@
-package jdk16;
+package jdk21;
 
 public class InstanceofTest {
     public String describeObject(Object obj) {
