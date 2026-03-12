@@ -39,6 +39,9 @@ export function Chat() {
     const [userPrompt,setUserPrompt] = useState('');
 
     const sendMsg = (e)=>{
+        if (!userPrompt || !userPrompt.trim()) {
+            return; // 输入为空，不发送
+        }
         console.log('sendMsg ... ');
         const source = new EventSource(`http://localhost:8080/openSseChat?userPrompt=${userPrompt}`,
             {
@@ -144,7 +147,17 @@ export function Chat() {
                 }
             </div>
             <div className="foot p-2 flex">
-                <Input className="m-1" value={userPrompt} onValueChange={setUserPrompt} ></Input>
+                <Input
+                    className="m-1"
+                    value={userPrompt}
+                    onValueChange={setUserPrompt}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
+                            sendMsg();
+                        }
+                    }}
+                ></Input>
                 <Button color='primary' className="m-1" onPress={sendMsg}>发送</Button>
             </div>
 
