@@ -43,13 +43,8 @@ export function Chat() {
             return; // 输入为空，不发送
         }
         console.log('sendMsg ... ');
-        const source = new EventSource(`http://localhost:8080/openSseChat?userPrompt=${userPrompt}`,
-            {
-                headers: {
-                    'sessionId': sessionId
-                }
-            }
-        );
+        console.log("sessionId:",sessionId);
+        const source = new EventSource(`http://localhost:8080/openSseChat?userPrompt=${userPrompt}&sessionId=${sessionId}`);
         setMsgs([...msgs,{from:'user',content:userPrompt}]);
         source.addEventListener('start', (event) => {
             console.log('Custom event:', event.data);

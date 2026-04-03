@@ -9,10 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 public class AIController {
@@ -42,7 +39,7 @@ public class AIController {
 
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping(value ="/openSseChat",produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter openSseChat(@RequestParam("userPrompt") String userPrompt, @RequestHeader(value = "sessionId", required = false) String sessionId) throws IOException {
+    public SseEmitter openSseChat(@RequestParam("userPrompt") String userPrompt, @RequestParam("sessionId") String sessionId) throws IOException {
         String conversantId = sessionId==null? UUID.randomUUID().toString() :sessionId;
         SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
         emitter.onCompletion(() -> {
