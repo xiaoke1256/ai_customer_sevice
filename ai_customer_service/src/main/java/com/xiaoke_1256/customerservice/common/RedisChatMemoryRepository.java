@@ -45,8 +45,8 @@ public class RedisChatMemoryRepository implements ChatMemoryRepository, AutoClos
         Jedis jedis = this.jedisPool.getResource();
 
         try {
-            List<String> keys = new ArrayList<>(jedis.keys("spring_ai_alibaba_chat_memory:*"));
-            return keys.stream().map((key) -> key.substring("spring_ai_alibaba_chat_memory:".length())
+            List<String> keys = new ArrayList<>(jedis.keys(DEFAULT_KEY_PREFIX+"*"));
+            return keys.stream().map((key) -> key.substring(DEFAULT_KEY_PREFIX.length())
             ).toList();
         } catch (Throwable t) {
             if (jedis != null) {
@@ -72,7 +72,7 @@ public class RedisChatMemoryRepository implements ChatMemoryRepository, AutoClos
         Jedis jedis = this.jedisPool.getResource();
 
         try {
-            String key = "spring_ai_alibaba_chat_memory:" + conversationId;
+            String key = DEFAULT_KEY_PREFIX + conversationId;
             List<String> messageStrings = jedis.lrange(key, 0L, -1L);
             List<Message> messages = new ArrayList();
             Iterator iterator = messageStrings.iterator();
@@ -117,7 +117,7 @@ public class RedisChatMemoryRepository implements ChatMemoryRepository, AutoClos
         Jedis jedis = this.jedisPool.getResource();
 
         try {
-            String key = "spring_ai_alibaba_chat_memory:" + conversationId;
+            String key = DEFAULT_KEY_PREFIX + conversationId;
             this.deleteByConversationId(conversationId);
             Iterator iterator = messages.iterator();
 
@@ -127,6 +127,7 @@ public class RedisChatMemoryRepository implements ChatMemoryRepository, AutoClos
                 try {
                     String messageJson = this.objectMapper.writeValueAsString(message);
                     jedis.rpush(key, new String[]{messageJson});
+                    jedis.expire(key, 20*60);
                 } catch (JsonProcessingException var9) {
                     JsonProcessingException e = var9;
                     throw new RuntimeException("Error serializing message", e);
@@ -156,7 +157,7 @@ public class RedisChatMemoryRepository implements ChatMemoryRepository, AutoClos
         Jedis jedis = this.jedisPool.getResource();
 
         try {
-            String key = "spring_ai_alibaba_chat_memory:" + conversationId;
+            String key = DEFAULT_KEY_PREFIX + conversationId;
             jedis.del(key);
         } catch (Throwable t1) {
             if (jedis != null) {
@@ -181,7 +182,7 @@ public class RedisChatMemoryRepository implements ChatMemoryRepository, AutoClos
         Jedis jedis = this.jedisPool.getResource();
 
         try {
-            String key = "spring_ai_alibaba_chat_memory:" + conversationId;
+            String key = DEFAULT_KEY_PREFIX + conversationId;
             List<String> all = jedis.lrange(key, 0L, -1L);
             if (all.size() >= maxLimit) {
                 all = all.stream().skip((long)Math.max(0, deleteSize)).toList();

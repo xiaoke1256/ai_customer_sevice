@@ -1,6 +1,6 @@
 package com.xiaoke_1256.customerservice.ai;
 
-import com.alibaba.cloud.ai.memory.redis.RedisChatMemoryRepository;
+import com.xiaoke_1256.customerservice.common.RedisChatMemoryRepository;
 import com.xiaoke_1256.customerservice.service.OrderService;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.PromptChatMemoryAdvisor;
